@@ -1,0 +1,58 @@
+server:
+  port: 1000
+  
+spring:
+  application:
+    name: API-GATEWAY-DEMART
+  cloud:
+    gateway:
+      routes:
+      - id: DEmart-ProductService
+        uri: lb://DEmart-ProductService
+        predicates:
+          - Path=/product-type/**
+        filters: 
+        - AuthenticationFilter
+        
+      - id: DEMART-SECURTIY-SERVICE
+        uri: lb://DEMART-SECURTIY-SERVICE
+        predicates:
+          - Path=/auth/**
+        filters:
+        - AuthenticationFilter
+        
+      - id: DEMART-BrandService
+        uri: lb://DEMART-BrandService
+        predicates:
+          - Path=/brands/**
+        filters:
+        - AuthenticationFilter
+        
+      - id: DEMART-SellerSubService
+        uri: lb://DEMART-SellerSubService
+        predicates:
+          - Path=/sellers/**
+        filters:
+        - AuthenticationFilter
+      
+      - id: DEMART-ManufacturerService
+        uri: lb://DEMART-ManufacturerService
+        predicates:
+          - Path=/manufacturers/**
+        filters:
+        - AuthenticationFilter
+        
+        
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:1000"
+            allowedHeaders: "Authorization"
+            allowedMethods:
+            - GET
+            - POST
+            - PUT
+            - DELETE
+    
+ 
+         
