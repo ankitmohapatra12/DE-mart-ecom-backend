@@ -35,7 +35,7 @@ public class Category {
 	private String categoryName;
 	
 	
-	
+	private boolean pinCategory;
 
 	private String discounts;
 	
@@ -51,7 +51,6 @@ public class Category {
 	
 	
 	@OneToMany(mappedBy = "category_sub",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-	@JsonIgnore
 	private List<SubCategory> subCategories = new ArrayList<>();
 	
 	

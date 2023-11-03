@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.products.dto.Brand;
+import com.products.dto.Manufacturer;
 import com.products.dto.Seller;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -41,12 +44,19 @@ public class Product {
 	
 	private long quantityInStock;
 	
-	private String manufacturer;
+	
+	
+	@OneToMany(mappedBy = "productProperty",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	private List<Property> productProperty;
+	
+	@Transient
+	private Manufacturer manufacturer;
 	
 	private long brandId;
 	
 	private String vendor;
 	
+	@Column(columnDefinition = "TEXT")
 	private String productDescription;
 	
 	private String rating;
@@ -54,6 +64,7 @@ public class Product {
 	@Transient
 	private Brand brand;
 	
+	private long manufacturerId;
 	
 	private long sellerId;
 	

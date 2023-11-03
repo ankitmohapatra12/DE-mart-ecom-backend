@@ -21,6 +21,8 @@ public interface UserCredRepository extends JpaRepository<UserCreds, Long>{
 
 	UserCreds findByUserName(String userName);
 
+	UserCreds findByUserId(long userId);
+
 	
 	
 

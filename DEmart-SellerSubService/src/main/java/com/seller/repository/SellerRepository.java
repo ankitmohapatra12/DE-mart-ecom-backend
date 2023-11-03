@@ -9,4 +9,11 @@ import com.seller.entity.Sellers;
 @Repository
 public interface SellerRepository extends JpaRepository<Sellers, Long> {
 
+	
+	Sellers findBySellerName(String sellerName);
+
+	Sellers findBySellerEmail(String sellerEmail);
+
+	Sellers findBySellerId(long sellerId);
+
 }

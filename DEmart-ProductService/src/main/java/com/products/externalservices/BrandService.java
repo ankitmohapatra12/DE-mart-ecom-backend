@@ -19,4 +19,7 @@ public interface BrandService {
 	
 	@GetMapping("/brands/{id}")
 	Brand getBrand(@PathVariable("id") String id);
+
+	
+	
 }

@@ -14,4 +14,6 @@ public interface ManufacturerService {
 
 	List<Manufacturer> viewManufacturers() throws Exception;
 
+	Manufacturer viewManufacturersById(long manufacturerId);
+
 }

@@ -5,32 +5,46 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
+import org.bouncycastle.asn1.its.HashedData;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.products.dto.Brand;
+import com.products.dto.Filters;
+import com.products.dto.FilteredData;
+import com.products.dto.Manufacturer;
+import com.products.dto.ProductPayload;
 import com.products.entity.Category;
 import com.products.entity.CategoryImages;
 import com.products.entity.Product;
 import com.products.entity.ProductImages;
 import com.products.entity.ProductType;
+import com.products.entity.Property;
 import com.products.entity.SubCategory;
 import com.products.entity.SubCategoryImages;
 import com.products.exception.ProductTypeFailedException;
 import com.products.externalservices.BrandService;
+import com.products.externalservices.ManufacturerService;
 import com.products.services.ProductTypeService;
 
 @RequestMapping("/product-type")
@@ -49,6 +63,10 @@ public class ProductTypeController {
 	private String subCategoryImagePath;
 	
 	 private final BrandService brandService;
+	 
+	 
+	 @Autowired
+	 private ManufacturerService nmanufacturerService;
 
 	    @Autowired
 	    public ProductTypeController(BrandService brandService) {
@@ -69,7 +87,7 @@ public class ProductTypeController {
 	
 	
 	@GetMapping("/all/view")
-	public ResponseEntity<List<ProductType>> viewProductType() throws ProductTypeFailedException {
+	public ResponseEntity<List<ProductType>> viewProductType() throws Exception {
 		return ResponseEntity.ok(productTypeService.viewProductType());
 	}
 	
@@ -206,6 +224,51 @@ public class ProductTypeController {
 	}
 	
 	
+	
+	@PostMapping("/categories/sub-categories/view/{subCategoryId}")
+	public ResponseEntity<ProductPayload> viewSubCategoryProducts(@PathVariable String subCategoryId,@RequestParam(name = "page") int page,
+		    @RequestParam(name = "size") int size,@RequestBody Optional<FilteredData> filteredData) throws ProductTypeFailedException,Exception {
+		
+		List<Product> products = new ArrayList<>();
+		
+		if(filteredData.isEmpty()) {
+			Filters filters = new Filters();
+			filters.setSubCategories(List.of());
+			filters.setColors(List.of());
+			filters.setGenders(List.of());
+			filters.setBrands(List.of());
+			filters.setRating(0);
+			filters.setMax_price(0);
+			filters.setMin_price(0);
+			filters.setMin_discount(0);
+			filters.setMax_discount(0);
+			products = productTypeService.getProductsBasedOnSubCategory(Long.parseLong(subCategoryId),PageRequest.of(page, size),filters);
+		}
+		else {
+			products = productTypeService.getProductsBasedOnSubCategory(Long.parseLong(subCategoryId),PageRequest.of(page, size),filteredData.get().getFilters());
+		}
+		
+		long totalProducts = productTypeService.viewProducts().size();
+		long totalSearchProducts = productTypeService.viewProductsBySubCategory(Long.parseLong(subCategoryId)).size();
+//		Set<String> subCategoryNames = new HashSet<>();
+//		for(Product product:products) {
+//			subCategoryNames.add(product.getSubCategoryProducts().getSubCategoryName());
+//		}
+//		String subCategoryName = products.get(0).getSubCategoryProducts().getSubCategoryName();
+		ProductPayload payload = new ProductPayload();
+		payload.setProducts(products);
+		payload.setProductsSize(totalSearchProducts);
+		payload.setTotalProductsSize(totalProducts);
+//		payload.setSubCategoryName(subCategoryNames);
+		
+		
+		return ResponseEntity.ok(payload);
+	}
+	
+	
+	
+	
+	
 	@GetMapping("/brands")
 	public ResponseEntity<List<Brand>> viewBrands() throws ProductTypeFailedException,Exception {
 		List<Brand> brands =  brandService.getBrands();
@@ -215,10 +278,22 @@ public class ProductTypeController {
 	}
 	
 	
+	@GetMapping("/manufacturers")
+	public ResponseEntity<List<Manufacturer>> viewManufacturers() throws ProductTypeFailedException,Exception {
+		List<Manufacturer> manufacturer =  nmanufacturerService.getManufacturers();
+		
+//		System.out.println(categories.get(0).getCategoryImages());
+		return ResponseEntity.ok(manufacturer);
+	}
+	
+	
 	
 	@PostMapping(value={"/category/sub-category/product/add"},consumes = {"multipart/form-data",MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Product> addProduct(@RequestPart("files") MultipartFile images[],@RequestPart("product") Product product) throws ProductTypeFailedException, IOException {
 		
+		for(Property property : product.getProductProperty()) {
+			property.setProductProperty(product);
+		}
 		
 		boolean flag= true;
 		File destPath = null;
@@ -271,6 +346,47 @@ public class ProductTypeController {
 	@GetMapping("/categories/sub-categories/products/view")
 	public ResponseEntity<List<Product>> viewProducts() throws ProductTypeFailedException,Exception {
 		List<Product> products =  productTypeService.viewProducts();
+		//System.out.println(products.get(0).getSubCategoryProducts().getSubCategoryName());
+		return ResponseEntity.ok(products);
+	}
+	
+	@GetMapping("/user/categories/sub-categories/products/view/{productId}")
+	public ResponseEntity<Product> viewProduct(@PathVariable String productId) throws ProductTypeFailedException,Exception {
+		System.out.println(productId);
+		Product product =  productTypeService.viewProduct(Integer.parseInt(productId));
+	
+		//System.out.println(products.get(0).getSubCategoryProducts().getSubCategoryName());
+		return ResponseEntity.ok(product);
+	}
+	
+	
+	
+	@GetMapping("/categories/sub-categories/products/view/colors")
+	public ResponseEntity<Set<String>> viewProductColors() throws ProductTypeFailedException,Exception {
+		List<Product> products =  productTypeService.viewProducts();
+		Set<String> colors = new HashSet<>();
+		for(Product product :products) {
+			List<Property> properties =  product.getProductProperty(); 
+			
+			for(Property property :properties) {
+				
+				if(property.getPropertyName().trim().equalsIgnoreCase("COLOR")) {
+					System.out.println(property.getPropertyName());
+					System.out.println(property.getPropertyValue()+"\n\n");
+					colors.add(property.getPropertyValue().toUpperCase().trim());
+				}
+			}
+		}
+		
+		//System.out.println(products.get(0).getSubCategoryProducts().getSubCategoryName());
+		return ResponseEntity.ok(colors);
+	}
+	
+	
+	@GetMapping("/categories/sub-categories/products/view/{sellerId}")
+	public ResponseEntity<List<Product>> viewSellerProducts(@PathVariable String sellerId) throws ProductTypeFailedException,Exception {
+		System.out.println(sellerId);
+		List<Product> products =  productTypeService.viewSellerProducts(Integer.parseInt(sellerId));
 		//System.out.println(products.get(0).getSubCategoryProducts().getSubCategoryName());
 		return ResponseEntity.ok(products);
 	}

@@ -3,8 +3,10 @@ package com.auth.models;
 
 
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -20,6 +22,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,6 +47,15 @@ public class UserCreds implements UserDetails{
 	@JsonIgnore
 	private Set<UserRole> userRoles = new HashSet<>();
 
+	
+	
+	@OneToOne(mappedBy = "userData",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	private UserPresonal userPersonalData = new UserPresonal();
+	
+	@OneToMany(mappedBy = "userAddresses",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	private List<UserAddresses> userAddresses = new ArrayList<>();
+	
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<Authority> set = new HashSet<>();
@@ -154,6 +166,16 @@ public class UserCreds implements UserDetails{
 	public String getUsername() {
 		// TODO Auto-generated method stub
 		return userName;
+	}
+
+
+	public UserPresonal getUserPersonalData() {
+		return userPersonalData;
+	}
+
+
+	public void setUserPersonalData(UserPresonal userPersonalData) {
+		this.userPersonalData = userPersonalData;
 	}
 
 

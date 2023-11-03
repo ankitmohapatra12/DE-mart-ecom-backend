@@ -47,4 +47,11 @@ public class BrandServiceImpl implements BrandService {
 		return brands;
 	}
 
+
+	@Override
+	public Brand viewBrands(long id) {
+		// TODO Auto-generated method stub
+		return brandRepository.findById(id).get();
+	}
+
 }

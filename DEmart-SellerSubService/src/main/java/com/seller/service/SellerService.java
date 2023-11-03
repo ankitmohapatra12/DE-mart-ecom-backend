@@ -15,4 +15,8 @@ public interface SellerService {
 
 	List<Sellers> viewSellers() throws Exception;
 
+	Sellers getSeller(String name) throws Exception ;
+
+	Sellers getSellerById(long sellerId)  throws Exception;
+
 }

@@ -14,6 +14,13 @@ spring:
         filters: 
         - AuthenticationFilter
         
+      - id: DEmart-OrderCartWishListService
+        uri: lb://DEmart-OrderCartWishListService
+        predicates:
+          - Path=/cart/**
+        filters: 
+        - AuthenticationFilter
+        
       - id: DEMART-SECURTIY-SERVICE
         uri: lb://DEMART-SECURTIY-SERVICE
         predicates:
@@ -39,6 +46,20 @@ spring:
         uri: lb://DEMART-ManufacturerService
         predicates:
           - Path=/manufacturers/**
+        filters:
+        - AuthenticationFilter
+     
+      - id: DEMART-SECURTIY-SERVICE
+        uri: lb://DEMART-SECURTIY-SERVICE
+        predicates:
+          - Path=/profile/**
+        filters:
+        - AuthenticationFilter
+        
+      - id: DEMART-SECURTIY-SERVICE
+        uri: lb://DEMART-SECURTIY-SERVICE
+        predicates:
+          - Path=/location/**
         filters:
         - AuthenticationFilter
         

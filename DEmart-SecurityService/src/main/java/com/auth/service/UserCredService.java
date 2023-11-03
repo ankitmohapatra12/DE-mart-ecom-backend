@@ -11,4 +11,8 @@ import com.auth.models.UserRole;
 public interface UserCredService {
 
 	UserCreds createUser(UserCreds user,Set<UserRole> roles) throws Exception;
+
+	UserCreds findByUserId(long userId);
+
+	UserCreds updateUser(UserCreds userCreds);
 }

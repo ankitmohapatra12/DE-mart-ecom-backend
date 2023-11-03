@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.auth.Constants.PortalConstants;
 import com.auth.dto.AuthRequest;
+import com.auth.dto.SellerData;
 import com.auth.dto.TokenResponse;
 import com.auth.models.Role;
 import com.auth.models.UserCreds;
@@ -59,6 +60,27 @@ public class AuthController {
 		UserRole userRole = new UserRole();
 		Role role = new Role();
 		role = roleService.getRoles(String.valueOf(PortalConstants.USER));
+		userRole.setUser(user);
+		userRole.setRole(role);
+		roles.add(userRole);
+		UserCreds userCreds = userService.createUser(user,roles);
+		return userCreds;
+	}
+	
+	@PostMapping("/seller-register")
+	public UserCreds createSellerAccount(@RequestBody SellerData seller) throws Exception {
+		
+		UserCreds user  = new UserCreds();
+		user.setUserName(seller.getUsername());
+		user.setPassword(seller.getPassword());
+		user.setUserEmail(seller.getEmail());
+		user.setMobile(seller.getPhone());
+		
+		System.out.println(user);
+		Set<UserRole> roles =  new HashSet<>();
+		UserRole userRole = new UserRole();
+		Role role = new Role();
+		role = roleService.getRoles(String.valueOf(PortalConstants.SELLER));
 		userRole.setUser(user);
 		userRole.setRole(role);
 		roles.add(userRole);

@@ -1,10 +1,13 @@
 package com.products.services;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.products.dto.Brand;
+import com.products.dto.Filters;
 import com.products.entity.Category;
 import com.products.entity.Product;
 import com.products.entity.ProductType;
@@ -16,7 +19,7 @@ public interface ProductTypeService {
 	
 	public ProductType addProductType(ProductType productType)  throws ProductTypeFailedException ;
 
-	public List<ProductType> viewProductType();
+	public List<ProductType> viewProductType() throws Exception;
 
 	public Category addCategory(Category category);
 
@@ -33,4 +36,14 @@ public interface ProductTypeService {
 
 
 	public List<Brand> getAllBrands();
+
+	public List<Product> viewSellerProducts(long sellerId) throws Exception;
+
+	public SubCategory viewSubCategory(long subCategoryId);
+
+	public List<Product> getProductsBasedOnSubCategory(long subCategoryId, PageRequest pageRequest,Filters filterdData) throws Exception;
+
+	public List<Product> viewProductsBySubCategory(long subCategoryId);
+
+	public Product viewProduct(int productId) throws Exception;
 }

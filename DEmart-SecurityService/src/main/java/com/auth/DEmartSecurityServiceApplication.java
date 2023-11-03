@@ -9,9 +9,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 
 import com.auth.Constants.PortalConstants;
 import com.auth.models.Role;
@@ -36,6 +38,11 @@ public class DEmartSecurityServiceApplication implements CommandLineRunner{
 	public static void main(String[] args) {
 		SpringApplication.run(DEmartSecurityServiceApplication.class, args);
 	}
+	@Bean
+    @LoadBalanced
+    RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
 	@Override
 	public void run(String... args) throws Exception {

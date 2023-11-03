@@ -36,7 +36,7 @@ public class AuthConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterC
 				.csrf()
 				.disable()
 				.authorizeHttpRequests()
-				.requestMatchers("/auth/register","/auth/token","/auth/validate","/auth/current-user").permitAll()
+				.requestMatchers("/auth/register","/location/**","/auth/token","/profile/**","/auth/validate","/auth/current-user","/auth/seller-register").permitAll()
 				.requestMatchers("/product-type/**").hasAuthority("ADMIN")
 				.and()
 				.build();

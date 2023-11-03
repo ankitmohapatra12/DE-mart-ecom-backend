@@ -13,4 +13,6 @@ public interface BrandService {
 
 	List<Brand> viewAllBrands() throws Exception;
 
+	Brand viewBrands(long id);
+
 }

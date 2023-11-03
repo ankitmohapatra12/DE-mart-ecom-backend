@@ -11,9 +11,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -137,4 +139,25 @@ public class SellerController {
 		return ResponseEntity.ok(sellers);
 	}
 	
+	
+	@GetMapping("/all/view/{userEmail}")
+	public ResponseEntity<Sellers> getSeller(@PathVariable String userEmail) throws Exception  {
+		
+		Sellers seller = sellerService.getSeller(userEmail);
+		
+		
+		
+		return ResponseEntity.ok(seller);
+	}
+	
+	
+	@GetMapping("/view/{sellerId}")
+	public ResponseEntity<Sellers> getSellerById(@PathVariable String sellerId) throws Exception  {
+		
+		Sellers seller = sellerService.getSellerById(Long.parseLong(sellerId));
+		
+		
+		
+		return ResponseEntity.ok(seller);
+	}
 }

@@ -9,4 +9,6 @@ import com.demart.manufacturer.entity.Manufacturer;
 @Repository
 public interface ManufacturerRepository extends JpaRepository<Manufacturer, Long> {
 
+	Manufacturer findByManufacturerId(long manufacturerId);
+
 }

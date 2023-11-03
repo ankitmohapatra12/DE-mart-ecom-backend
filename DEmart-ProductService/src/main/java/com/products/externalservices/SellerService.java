@@ -16,6 +16,6 @@ public interface SellerService {
 	@GetMapping("/sellers/all/view")
 	List<Seller> getSellers();
 	
-	@GetMapping("/brands/{id}")
-	Brand getBrand(@PathVariable("id") String id);
+	@GetMapping("/sellers/view/{sellerId}")
+	Seller getSeller(@PathVariable("sellerId") String sellerId);
 }

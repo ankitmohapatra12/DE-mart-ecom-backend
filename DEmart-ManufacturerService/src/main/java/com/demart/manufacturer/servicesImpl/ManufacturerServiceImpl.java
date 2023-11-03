@@ -187,4 +187,11 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 	}
 
 
+	@Override
+	public Manufacturer viewManufacturersById(long manufacturerId) {
+		// TODO Auto-generated method stub
+		return manufactuererRepository.findByManufacturerId(manufacturerId);
+	}
+
+
 }
