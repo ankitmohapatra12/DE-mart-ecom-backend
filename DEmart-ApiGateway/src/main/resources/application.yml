@@ -28,6 +28,15 @@ spring:
         filters:
         - AuthenticationFilter
         
+      - id: DEmart-RatingReviewService
+        uri: lb://DEmart-RatingReviewService
+        predicates:
+          - Path=/review/**
+        filters:
+        - AuthenticationFilter
+        
+      
+        
       - id: DEMART-BrandService
         uri: lb://DEMART-BrandService
         predicates:

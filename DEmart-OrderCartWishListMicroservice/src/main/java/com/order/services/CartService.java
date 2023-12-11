@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.order.entity.CartItem;
+import com.order.entity.Order;
 
 @Service
 public interface CartService {
@@ -16,5 +17,13 @@ public interface CartService {
 	List<CartItem> getCart(Long userId);
 
 	void removeFromCart(CartItem cartItem);
+
+	Order saveOrder(Order order);
+
+	List<Order> getAllOrder(String userId);
+
+	Order cancelOrder(String orderId);
+
+	List<Order> getAllOrdersAdmin();
 
 }

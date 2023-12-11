@@ -14,29 +14,29 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Document("orders")
-public class UserOrder {
-	
-	
-	
-    private String orderId;
-
-    private LocalDateTime orderDate;
-    
-    private long orderedBy;
-    
-    private String customerName;
-    
-    private String customerEmail;
-    
-    
-    private UserAddress address;
-    // Other fields...
-
-    @DBRef
-    private List<CartItem> cartItems;
-   
-}
+//@Data
+//@AllArgsConstructor
+//@NoArgsConstructor
+//@Document("orders")
+//public class UserOrder {
+//	
+//	
+//	
+//    private String orderId;
+//
+//    private LocalDateTime orderDate;
+//    
+//    private long orderedBy;
+//    
+//    private String customerName;
+//    
+//    private String customerEmail;
+//    
+//    
+//    private UserAddress address;
+//    // Other fields...
+//
+//    @DBRef
+//    private List<CartItem> cartItems;
+//   
+//}
